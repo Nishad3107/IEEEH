@@ -33,6 +33,8 @@ The frontend expects the API at `http://localhost:5000/api` by default. Set `VIT
 
 The requested App Router dashboard components are in `next-dashboard/`.
 
+From the repository root, run `npm run dev` for the Next.js dashboard. Run `npm run dev:backend` in a second terminal for the Express API.
+
 ```bash
 cd next-dashboard
 npm install

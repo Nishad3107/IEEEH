@@ -1,0 +1,10 @@
+{
+  "name": "final-year-project-tracker",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix next-dashboard run dev",
+    "dev:backend": "npm --prefix backend start",
+    "build": "npm --prefix next-dashboard run build",
+    "start": "npm --prefix next-dashboard run start"
+  }
+}
