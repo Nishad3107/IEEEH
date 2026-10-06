@@ -39,5 +39,6 @@ This repository is the source of truth for the Final-Year Project & Internship T
 - `supabase/schema.sql` — Auth, role, and Team Formation schema.
 - `supabase/mvp-schema.sql` — Remaining terms, guide allocation, reviews, progress, documents, and final submissions schema.
 - `supabase/team-formation.sql` — Secure team creation RPC, student-to-team linking, and current-team lookup.
+- `supabase/guide-preferences.sql` — Guide listing, preference submission, and allocation status RPCs.
 
-Run `supabase/schema.sql` first, then `supabase/mvp-schema.sql`, and finally `supabase/team-formation.sql` for the complete Supabase MVP database.
+Run `supabase/schema.sql` first, then `supabase/mvp-schema.sql`, then `supabase/team-formation.sql`, and finally `supabase/guide-preferences.sql` for the complete Supabase MVP database.

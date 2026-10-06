@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { Mail, Users } from "lucide-react";
 import TeamCreationForm from "./TeamCreationForm";
+import GuidePreferenceForm from "./GuidePreferenceForm";
 import { createClient } from "../../../utils/supabase/server";
 
 type TeamMember = {
@@ -10,6 +11,16 @@ type TeamMember = {
   member_email: string;
   member_roll_number: string | null;
   member_full_name: string | null;
+};
+
+type Guide = { id: string; full_name: string | null; email: string };
+
+type GuideStatus = {
+  team_id: string;
+  team_name: string;
+  preferences_submitted: boolean;
+  allocated_guide_id: string | null;
+  allocated_guide_name: string | null;
 };
 
 export default async function StudentDashboardPage() {
@@ -34,6 +45,10 @@ export default async function StudentDashboardPage() {
   }
 
   const team = teamMembers[0];
+  const { data: guideStatusData, error: guideStatusError } = team ? await supabase.rpc("get_my_guide_status") : { data: [], error: null };
+  const guideStatus = (guideStatusData?.[0] || null) as GuideStatus | null;
+  const { data: guidesData } = team && !guideStatus?.preferences_submitted && !guideStatus?.allocated_guide_id ? await supabase.rpc("list_guides_for_students") : { data: [] };
+  const guides = (guidesData || []) as Guide[];
 
   return (
     <main className="min-h-[calc(100vh-5rem)] bg-slate-50 px-5 py-10 sm:px-8">
@@ -72,9 +87,17 @@ export default async function StudentDashboardPage() {
                   </div>
                 ))}
               </div>
+
+              {guideStatusError ? <div className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">Guide preference status could not be loaded. Please refresh the page.</div> : guideStatus?.allocated_guide_id ? <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-5"><p className="text-sm font-semibold text-emerald-700">Guide allocated</p><p className="mt-1 text-lg font-bold text-emerald-950">Your Guide is: {guideStatus.allocated_guide_name || "Assigned guide"}</p></div> : guideStatus?.preferences_submitted ? <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-5"><p className="font-semibold text-amber-800">Preferences Submitted, waiting for allocation</p><p className="mt-1 text-sm text-amber-700">The coordinator will allocate a guide after reviewing team preferences.</p></div> : <GuidePreferenceForm guides={guides} teamId={team.team_id} />}
             </section>
           ) : (
-            <TeamCreationForm />
+            <>
+              <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm text-amber-800">
+                <p className="font-semibold">Please form a team first.</p>
+                <p className="mt-1">After your team is created, you can submit your top three guide preferences here.</p>
+              </div>
+              <TeamCreationForm />
+            </>
           )}
         </div>
       </div>
