@@ -41,5 +41,6 @@ This repository is the source of truth for the Final-Year Project & Internship T
 - `supabase/team-formation.sql` — Secure team creation RPC, student-to-team linking, and current-team lookup.
 - `supabase/guide-preferences.sql` — Guide listing, preference submission, and allocation status RPCs.
 - `supabase/coordinator-allocation.sql` — Coordinator-only allocation data, guide load counts, and load-checked allocation RPC.
+- `supabase/guide-review-scheduling.sql` — Guide assigned-team lookup and secure review-date scheduling RPCs.
 
-Run `supabase/schema.sql` first, then `supabase/mvp-schema.sql`, then `supabase/team-formation.sql`, then `supabase/guide-preferences.sql`, and finally `supabase/coordinator-allocation.sql` for the complete Supabase MVP database.
+Run `supabase/schema.sql` first, then `supabase/mvp-schema.sql`, then `supabase/team-formation.sql`, then `supabase/guide-preferences.sql`, then `supabase/coordinator-allocation.sql`, and finally `supabase/guide-review-scheduling.sql` for the complete Supabase MVP database.
