@@ -1,5 +1,9 @@
 # Final-Year Project Tracker
 
+All implementation work is kept in this repository. New UI, API, database, and integration code should be added under the existing `frontend/`, `next-dashboard/`, `backend/`, or `supabase/` folders.
+
+See `docs/PROJECT_INVENTORY.md` for the complete code map.
+
 Starter implementation for the three-member MVP split:
 
 - `frontend/`: React + Tailwind login screen and Axios JWT interceptor.
@@ -59,6 +63,6 @@ Seed accounts:
 The Next.js app also includes Supabase Auth with role lookup through `public.users`:
 
 1. Create a Supabase project.
-2. Run `supabase/schema.sql` in the Supabase SQL editor.
+2. Run `supabase/schema.sql`, then `supabase/mvp-schema.sql` in the Supabase SQL editor.
 3. Copy `next-dashboard/.env.local.example` to `next-dashboard/.env.local` and add the project URL and anon key.
 4. Create users through Supabase Authentication. The trigger creates their `public.users` profile with a `student` role by default; update the role to `guide` or `coordinator` from a protected admin workflow.
