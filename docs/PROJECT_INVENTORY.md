@@ -42,5 +42,6 @@ This repository is the source of truth for the Final-Year Project & Internship T
 - `supabase/guide-preferences.sql` — Guide listing, preference submission, and allocation status RPCs.
 - `supabase/coordinator-allocation.sql` — Coordinator-only allocation data, guide load counts, and load-checked allocation RPC.
 - `supabase/guide-review-scheduling.sql` — Guide assigned-team lookup and secure review-date scheduling RPCs.
+- `supabase/progress-logs.sql` — Public document bucket policies, progress-log/document RPCs, and document linking.
 
-Run `supabase/schema.sql` first, then `supabase/mvp-schema.sql`, then `supabase/team-formation.sql`, then `supabase/guide-preferences.sql`, then `supabase/coordinator-allocation.sql`, and finally `supabase/guide-review-scheduling.sql` for the complete Supabase MVP database.
+Run `supabase/schema.sql` first, then `supabase/mvp-schema.sql`, then `supabase/team-formation.sql`, then `supabase/guide-preferences.sql`, then `supabase/coordinator-allocation.sql`, then `supabase/guide-review-scheduling.sql`, and finally `supabase/progress-logs.sql` for the complete Supabase MVP database.
