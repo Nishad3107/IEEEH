@@ -1,21 +1,19 @@
-"use client";
+import { redirect } from "next/navigation";
+import { createClient } from "../../utils/supabase/server";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "../../context/AuthContext";
+export default async function DashboardPage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
-export default function DashboardRedirect() {
-  const router = useRouter();
-  const { user, role, loading } = useAuth();
+  if (!user) redirect("/login");
 
-  useEffect(() => {
-    if (loading) return;
-    if (!user) {
-      router.replace("/login");
-      return;
-    }
-    router.replace(role === "student" ? "/student" : role === "guide" ? "/guide" : "/");
-  }, [loading, role, router, user]);
+  const { data: profile } = await supabase
+    .from("users")
+    .select("role")
+    .eq("id", user.id)
+    .single();
 
-  return <main className="grid min-h-screen place-items-center bg-slate-50 text-sm text-slate-500">Loading your workspace…</main>;
+  if (profile?.role === "guide") redirect("/dashboard/guide");
+  if (profile?.role === "coordinator") redirect("/dashboard/coordinator");
+  redirect("/dashboard/student");
 }

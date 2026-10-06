@@ -1,0 +1,3 @@
+export default function GuideDashboardPage() {
+  return <main className="min-h-[calc(100vh-5rem)] bg-slate-50 px-5 py-10 sm:px-8"><div className="mx-auto max-w-6xl"><p className="text-sm font-semibold uppercase tracking-widest text-indigo-600">Guide workspace</p><h1 className="mt-2 text-3xl font-bold tracking-tight">Welcome to your dashboard</h1><p className="mt-3 max-w-2xl text-sm leading-6 text-slate-500">Review assigned teams, monitor progress, and submit review feedback.</p><div id="teams" className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"><h2 className="text-lg font-bold">Assigned teams</h2><p className="mt-2 text-sm text-slate-500">Assigned project teams will appear here.</p></div></div></main>;
+}

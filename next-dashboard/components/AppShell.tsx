@@ -15,6 +15,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   }, [authRole]);
 
   if (pathname === "/login") return <>{children}</>;
+  if (pathname.startsWith("/dashboard")) return <>{children}</>;
 
   return <><Sidebar userRole={role} /><div className="min-h-screen lg:pl-72">{children}</div></>;
 }
