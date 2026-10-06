@@ -1,8 +1,9 @@
 import { redirect } from "next/navigation";
-import { ExternalLink, Mail, Users } from "lucide-react";
+import { ExternalLink, FileCheck2, Mail, Users } from "lucide-react";
 import TeamCreationForm from "./TeamCreationForm";
 import GuidePreferenceForm from "./GuidePreferenceForm";
 import ProgressLogForm from "./ProgressLogForm";
+import FinalSubmissionForm from "./FinalSubmissionForm";
 import { createClient } from "../../../utils/supabase/server";
 
 type TeamMember = {
@@ -33,6 +34,15 @@ type ProgressLog = {
   mime_type: string;
 };
 
+type FinalSubmission = {
+  team_id: string;
+  team_name: string;
+  team_status: "in_progress" | "completed";
+  repository_url: string | null;
+  final_report_url: string | null;
+  submitted_at: string | null;
+};
+
 export default async function StudentDashboardPage() {
   const supabase = await createClient();
   const {
@@ -61,6 +71,8 @@ export default async function StudentDashboardPage() {
   const guides = (guidesData || []) as Guide[];
   const { data: progressLogsData, error: progressLogsError } = team ? await supabase.rpc("get_my_progress_logs", { p_team_id: team.team_id }) : { data: [], error: null };
   const progressLogs = (progressLogsData || []) as ProgressLog[];
+  const { data: finalSubmissionData, error: finalSubmissionError } = team ? await supabase.rpc("get_my_final_submission", { p_team_id: team.team_id }) : { data: [], error: null };
+  const finalSubmission = (finalSubmissionData?.[0] || null) as FinalSubmission | null;
 
   return (
     <main className="min-h-[calc(100vh-5rem)] bg-slate-50 px-5 py-10 sm:px-8">
@@ -104,6 +116,7 @@ export default async function StudentDashboardPage() {
               {guideStatusError ? <div className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">Guide preference status could not be loaded. Please refresh the page.</div> : guideStatus?.allocated_guide_id ? <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-5"><p className="text-sm font-semibold text-emerald-700">Guide allocated</p><p className="mt-1 text-lg font-bold text-emerald-950">Your Guide is: {guideStatus.allocated_guide_name || "Assigned guide"}</p></div> : guideStatus?.preferences_submitted ? <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-5"><p className="font-semibold text-amber-800">Preferences Submitted, waiting for allocation</p><p className="mt-1 text-sm text-amber-700">The coordinator will allocate a guide after reviewing team preferences.</p></div> : <GuidePreferenceForm guides={guides} teamId={team.team_id} />}
             </section>
             <div className="mt-6 space-y-6"><ProgressLogForm teamId={team.team_id} /><section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"><div className="flex items-start justify-between gap-4"><div><h2 className="text-xl font-bold text-slate-900">Previous Progress Logs</h2><p className="mt-1 text-sm text-slate-500">Your team&apos;s uploaded updates and documents.</p></div><span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">{progressLogs.length} update{progressLogs.length === 1 ? "" : "s"}</span></div>{progressLogsError ? <p className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">Progress logs could not be loaded. Please refresh the page.</p> : progressLogs.length === 0 ? <p className="mt-6 rounded-xl bg-slate-50 p-5 text-sm text-slate-500">No progress logs have been uploaded yet.</p> : <div className="mt-6 space-y-3">{progressLogs.map((log) => <article key={log.progress_id} className="flex flex-col justify-between gap-4 rounded-xl border border-slate-200 p-4 sm:flex-row sm:items-center"><div><p className="font-semibold text-slate-900">{log.message}</p><p className="mt-1 text-xs text-slate-500">{new Date(log.created_at).toLocaleString()}</p></div><a href={log.file_url} target="_blank" rel="noreferrer" className="inline-flex w-fit items-center gap-2 rounded-lg bg-indigo-50 px-3 py-2 text-xs font-semibold text-indigo-700 hover:bg-indigo-100"><ExternalLink size={14} />Download {log.file_name}</a></article>)}</div>}</section></div>
+            <div className="mt-6">{finalSubmissionError ? <div className="rounded-2xl border border-red-200 bg-red-50 p-5 text-sm text-red-700">Final submission status could not be loaded. Please refresh the page.</div> : finalSubmission?.team_status === "completed" ? <section className="rounded-2xl border border-emerald-200 bg-emerald-50 p-6 shadow-sm sm:p-8"><div className="flex items-start gap-4"><div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-emerald-100 text-emerald-700"><FileCheck2 size={23} /></div><div><p className="text-sm font-semibold text-emerald-700">Final Project Submitted Successfully</p><p className="mt-1 text-sm text-emerald-800">Your team&apos;s final project has been recorded.</p></div></div><div className="mt-6 grid gap-3 sm:grid-cols-2"><a href={finalSubmission.repository_url || "#"} target="_blank" rel="noreferrer" className="rounded-xl bg-white p-4 text-sm font-semibold text-indigo-700 shadow-sm hover:bg-indigo-50">GitHub Repository<span className="mt-1 block truncate text-xs font-normal text-slate-500">{finalSubmission.repository_url}</span></a><a href={finalSubmission.final_report_url || "#"} target="_blank" rel="noreferrer" className="rounded-xl bg-white p-4 text-sm font-semibold text-indigo-700 shadow-sm hover:bg-indigo-50">Final Report<span className="mt-1 block text-xs font-normal text-slate-500">Open uploaded PDF</span></a></div></section> : <FinalSubmissionForm teamId={team.team_id} />}</div>
             </>
           ) : (
             <>
