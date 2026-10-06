@@ -12,6 +12,9 @@ type AssignedTeamMemberRow = {
   member_email: string;
   member_roll_number: string | null;
   review_date: string | null;
+  team_status: "in_progress" | "completed";
+  github_link: string | null;
+  final_report_url: string | null;
 };
 
 export default async function GuideDashboardPage() {
@@ -19,12 +22,12 @@ export default async function GuideDashboardPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { data, error } = await supabase.rpc("get_guide_assigned_teams");
+  const { data, error } = await supabase.rpc("get_guide_assigned_teams_with_submissions");
   const rows = (data || []) as AssignedTeamMemberRow[];
   const teams = Array.from(rows.reduce((grouped, row) => {
     const existing = grouped.get(row.team_id);
     if (existing) existing.members.push({ member_id: row.member_id, member_name: row.member_name, member_email: row.member_email, member_roll_number: row.member_roll_number });
-    else grouped.set(row.team_id, { team_id: row.team_id, team_name: row.team_name, review_date: row.review_date, members: [{ member_id: row.member_id, member_name: row.member_name, member_email: row.member_email, member_roll_number: row.member_roll_number }], progressLogs: [], progressError: null });
+    else grouped.set(row.team_id, { team_id: row.team_id, team_name: row.team_name, review_date: row.review_date, team_status: row.team_status, github_link: row.github_link, final_report_url: row.final_report_url, members: [{ member_id: row.member_id, member_name: row.member_name, member_email: row.member_email, member_roll_number: row.member_roll_number }], progressLogs: [], progressError: null });
     return grouped;
   }, new Map<string, GuideTeam>()).values());
 

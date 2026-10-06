@@ -9,7 +9,7 @@ export default async function CoordinatorDashboardPage() {
   if (!user) redirect("/login");
 
   const [{ data: teamsData, error: teamsError }, { data: guidesData, error: guidesError }] = await Promise.all([
-    supabase.rpc("get_coordinator_teams_for_allocation"),
+    supabase.rpc("get_coordinator_teams_with_submissions"),
     supabase.rpc("get_coordinator_guides_with_load"),
   ]);
 

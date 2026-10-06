@@ -9,6 +9,9 @@ export type GuideTeam = {
   team_id: string;
   team_name: string;
   review_date: string | null;
+  team_status: "in_progress" | "completed";
+  github_link: string | null;
+  final_report_url: string | null;
   members: { member_id: string; member_name: string; member_email: string; member_roll_number: string | null }[];
   progressLogs: { progress_id: string; message: string; created_at: string; file_name: string; file_url: string; mime_type: string }[];
   progressError: string | null;
@@ -44,6 +47,8 @@ export default function ReviewScheduleCard({ team }: { team: GuideTeam }) {
       </div>
 
       <div className="mt-6 grid gap-2 sm:grid-cols-2">{team.members.map((member) => <div key={member.member_id} className="rounded-xl bg-slate-50 px-4 py-3"><p className="text-sm font-semibold text-slate-800">{member.member_name}</p><p className="mt-1 text-xs text-slate-500">{member.member_roll_number || member.member_email}</p></div>)}</div>
+
+      {team.team_status === "completed" && <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4"><div className="flex flex-wrap items-center justify-between gap-3"><span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700">Final Project Completed</span><div className="flex flex-wrap gap-3 text-xs font-semibold"><a href={team.github_link || "#"} target="_blank" rel="noreferrer" className="text-indigo-700 hover:underline">GitHub Repository</a><a href={team.final_report_url || "#"} target="_blank" rel="noreferrer" className="text-indigo-700 hover:underline">Final Report PDF</a></div></div></div>}
 
       <details className="mt-6 rounded-xl border border-slate-200" open={team.progressLogs.length > 0}>
         <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-sm font-semibold text-slate-800"><span>Progress Logs ({team.progressLogs.length})</span><ChevronDown size={17} className="text-slate-400" /></summary>
