@@ -28,8 +28,7 @@ BEGIN
     NEW.email,
     COALESCE(NEW.raw_user_meta_data->>'full_name', ''),
     CASE
-      WHEN NEW.raw_user_meta_data->>'role' IN ('student', 'guide', 'coordinator')
-      THEN NEW.raw_user_meta_data->>'role'
+      WHEN NEW.raw_user_meta_data->>'role' = 'guide' THEN 'guide'
       ELSE 'student'
     END
   )
